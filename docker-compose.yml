@@ -1,0 +1,152 @@
+version: '3.7'
+
+networks:
+  larastack-network:
+    external: false
+#  nginx-proxy-manager:
+#    external: true
+
+services:
+  workspace:
+    image: ariadata/php-8.1:fpm-nginx
+    container_name: ${COMPOSE_PROJECT_NAME}_workspace
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './src:/var/www/html'
+      - './configs/nginx/:/etc/nginx/custom/'
+      - './configs/php/cli-override.ini:/etc/php/8.1/cli/conf.d/99-override.ini'
+      - './configs/php/fpm-php-override.ini:/etc/php/8.1/fpm/custom/fpm-php-override.ini'
+      - './configs/php/fpm-pool-override.conf:/etc/php/8.1/fpm/pool.d/zz-fpm-pool-override.conf'
+      - './logs/php:/var/log/php'
+      - './logs/nginx:/var/log/nginx'
+    environment:
+      TZ: '${DC_TZ}'
+      PUID: '${UID:-1000}'
+      PGID: '${GID:-1000}'
+    ports:
+      - '${DC_NGINX_HTTP_PORT:-80}:80'
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - larastack-network
+
+  supervisor:
+    image: ariadata/php-8.1:supervisor
+    container_name: ${COMPOSE_PROJECT_NAME}_supervisor
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - './src:/var/www/html'
+      - './configs/supervisor/:/etc/supervisor/conf.d'
+      - './configs/php/cli-override.ini:/etc/php/8.1/cli/conf.d/99-override.ini'
+      - './logs/php:/var/log/php'
+      - './logs/supervisor/:/var/log/supervisor'
+    environment:
+      TZ: '${DC_TZ}'
+      PUID: '${UID:-1000}'
+      PGID: '${GID:-1000}'
+    depends_on:
+      - workspace
+    networks:
+      - larastack-network
+
+  redis:
+    image: 'redis:7-alpine'
+    container_name: ${COMPOSE_PROJECT_NAME}_redis
+    restart: unless-stopped
+    ports:
+      - '${DC_REDIS_PORT:-6379}:6379'
+    volumes:
+      - './data/redis:/data'
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      retries: 3
+      timeout: 5s
+    networks:
+      - larastack-network
+
+  mysql:
+    image: 'mariadb:10.6'
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql
+    restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci  --default-authentication-plugin=mysql_native_password"
+#    ports:
+#      - '${DC_MYSQL_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DC_MYSQL_DB_ROOT_PASSWORD}'
+      MYSQL_DATABASE: '${DC_MYSQL_DB_DATABASE}'
+      MYSQL_USER: '${DC_MYSQL_DB_USERNAME}'
+      MYSQL_PASSWORD: '${DC_MYSQL_DB_PASSWORD}'
+      TZ: '${DC_TZ}'
+    volumes:
+      - './configs/mysql/my-cnf-overrides.cnf:/etc/mysql/conf.d/overrides.cnf'
+      - './data/mysql:/var/lib/mysql'
+      - './logs/mysql:/var/log/mysql'
+    networks:
+      - larastack-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-p${DC_MYSQL_DB_ROOT_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+
+  pgsql:
+    image: 'postgres:14.3'
+    container_name: ${COMPOSE_PROJECT_NAME}_pgsql
+    restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    ports:
+      - '${DC_PGSQL_DB_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${DC_PGSQL_DB_ROOT_PASSWORD}'
+      POSTGRES_DB: '${DC_PGSQL_DB_DATABASE}'
+      POSTGRES_USER: '${DC_PGSQL_DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DC_PGSQL_DB_PASSWORD}'
+    volumes:
+      - './configs/pgsql/postgresql.conf:/etc/postgresql/postgresql.conf'
+#      - './configs/pgsql/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf'
+      - './data/pgsql:/var/lib/postgresql/data'
+#      - './logs/pgsql:/var/log/postgresql'
+    command: "-c config_file=/etc/postgresql/postgresql.conf"
+#    command: /bin/bash -c "mkdir -p /logs && chmod -R 777 /logs && postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs"
+    networks:
+      - larastack-network
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DC_PGSQL_DB_DATABASE}", "-U", "${DC_PGSQL_DB_USERNAME}" ]
+      retries: 3
+      timeout: 5s
+
+  mongo:
+    image: 'mongo:5.0-focal'
+    container_name: ${COMPOSE_PROJECT_NAME}_mongo
+    restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: '${MONGO_INITDB_ROOT_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGO_INITDB_ROOT_PASSWORD}'
+      TZ: '${DC_TZ}'
+    ports:
+      - '${DC_MONGO_DB_PORT:-27017}:27017'
+    volumes:
+      - './data/mongo:/data/db'
+    networks:
+      - larastack-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1
+    container_name: ${COMPOSE_PROJECT_NAME}_phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: ${DC_MYSQL_DB_PORT}
+    restart: unless-stopped
+    ports:
+      - '${DC_PHPMYADMIN_HTTP_PORT:-8082}:80'
+    networks:
+      - larastack-network
+

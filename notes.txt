@@ -1,0 +1,7 @@
+https://npratley.net/building-laravel-8-for-production-release-with-horizon-and-octane-using-github-actions-c139e66f75de/
+https://github.com/DevLAN-io/laravel-boilerplate
+https://github.com/DevLAN-io/laravel-boilerplate/blob/master/docker/production/start-container
+
+swoole
+octane
+short-schedule
