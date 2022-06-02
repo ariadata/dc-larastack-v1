@@ -4,5 +4,5 @@ pgsql/*
 redis/*
 !mongo/.gitkeep
 !mysql/.gitkeep
-!pgsql/.gitkeep
+!pgsql/empty.gitkeep
 !redis/.gitkeep
