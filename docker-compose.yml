@@ -55,9 +55,10 @@ services:
       - larastack-network
 
   redis:
-    image: 'redis:7-alpine'
+    image: 'redis:7-bullseye'
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
     ports:
       - '${DC_REDIS_PORT:-6379}:6379'
     volumes:
@@ -107,12 +108,14 @@ services:
       POSTGRES_USER: '${DC_PGSQL_DB_USERNAME}'
       POSTGRES_PASSWORD: '${DC_PGSQL_DB_PASSWORD}'
     volumes:
-      - './configs/pgsql/postgresql.conf:/etc/postgresql/postgresql.conf'
+#      - './configs/pgsql/postgresql.conf:/etc/postgresql/postgresql.conf'
 #      - './configs/pgsql/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf'
       - './data/pgsql:/var/lib/postgresql/data'
 #      - './logs/pgsql:/var/log/postgresql'
-    command: "-c config_file=/etc/postgresql/postgresql.conf"
+#    command: "-c config_file=/etc/postgresql/postgresql.conf"
+#    command: ["sh", "-c", "chown 999:999 /var/lib/postgresql/data"]
 #    command: /bin/bash -c "mkdir -p /logs && chmod -R 777 /logs && postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs"
+#    command: /bin/bash -c "mkdir -p /var/lib/postgresql/data && chown 1000:1000 /var/lib/postgresql/data && chmod -R 777 /var/lib/postgresql/data && postgres"
     networks:
       - larastack-network
     healthcheck:
