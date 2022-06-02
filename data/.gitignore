@@ -1,4 +1,8 @@
-/mongo/*
-/mysql/*
-/pgsql/*
-/redis/*
+mongo/*
+mysql/*
+pgsql/*
+redis/*
+!mongo/.gitkeep
+!mysql/.gitkeep
+!pgsql/.gitkeep
+!redis/.gitkeep
