@@ -4,4 +4,11 @@ https://github.com/DevLAN-io/laravel-boilerplate/blob/master/docker/production/s
 
 swoole
 octane
-short-schedule
+
+
+CI-functions:
+- update
+- 
+
+-- artisan
+-- 
