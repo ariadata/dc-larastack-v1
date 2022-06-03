@@ -31,7 +31,10 @@ services:
       - mysql
       - redis
     networks:
-      - larastack-network
+      larastack-network:
+      nginx-proxy-manager:
+        aliases:
+          - mysite.com
 
   supervisor:
     image: ariadata/php-8.1:supervisor

@@ -11,7 +11,7 @@ CI-functions:
 - 
 
 -- artisan
--- 
+-- change timezone by sysytem
 -------------
 make commands bash_aliases 
 -

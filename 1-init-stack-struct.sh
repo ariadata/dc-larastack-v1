@@ -19,9 +19,9 @@ docker-compose pull
 
 docker-compose up -d
 
-docker-compose exec -T workspace php artisan key:generate
-
 docker-compose exec -T workspace composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+docker-compose exec -T workspace php artisan key:generate
 
 # php artisan config:cache
 # php artisan storage:link
