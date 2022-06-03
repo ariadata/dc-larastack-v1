@@ -10,3 +10,7 @@ mkdir -p ./data/pgsql
 if [ ! -f /src/.env ]; then
 	cp ./src/.env.example ./src/.env
 fi
+
+docker-compose pull
+
+docker-compose 

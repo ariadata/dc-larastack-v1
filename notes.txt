@@ -12,3 +12,11 @@ CI-functions:
 
 -- artisan
 -- 
+-------------
+make commands bash_aliases 
+-
+-- find id and write the PID,GID in env files
+-- config (manual) .env of src
+-- regenerate stack-env file by using laravel's env
+-- prepare-behind-nginx-proxy-manager (remove or change expose ports to local and ...)
+-- 

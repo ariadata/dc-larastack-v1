@@ -116,6 +116,7 @@ services:
 #    command: ["sh", "-c", "chown 999:999 /var/lib/postgresql/data"]
 #    command: /bin/bash -c "mkdir -p /logs && chmod -R 777 /logs && postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs"
 #    command: /bin/bash -c "mkdir -p /var/lib/postgresql/data && chown 1000:1000 /var/lib/postgresql/data && chmod -R 777 /var/lib/postgresql/data && postgres"
+# https://bytemeta.vip/repo/docker-library/postgres/issues/917
     networks:
       - larastack-network
     healthcheck:
