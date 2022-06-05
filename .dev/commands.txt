@@ -19,7 +19,7 @@ docker-compose -f docker-compose.yml exec -u webuser -T workspace composer updat
 docker-compose -f docker-compose.yml exec -u webuser -T workspace php artisan key:generate
 
 
-docker-compose -f docker-compose.yml exec -u webuser -T workspace php artisan migrate:fresh --force
+docker-compose -f docker-compose.yml exec -u webuser workspace php artisan migrate:fresh --force
 
 # docker-compose -f docker-compose.yml exec -u webuser workspace php artisan XXX
 
