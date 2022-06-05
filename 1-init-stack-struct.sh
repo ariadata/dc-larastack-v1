@@ -2,6 +2,7 @@
 cd "$(dirname "$0")"
 
 mkdir -p ./data/pgsql
+mkdir -p ./src
 
 # create a .env file from example of stack
 [ ! -f .env ] && cp .env.example .env
