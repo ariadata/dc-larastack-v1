@@ -3,8 +3,8 @@ version: '3.7'
 networks:
   larastack-network:
     external: false
-#  nginx-proxy-manager:
-#    external: true
+  nginx-proxy-manager:
+    external: true
 
 services:
   workspace:
