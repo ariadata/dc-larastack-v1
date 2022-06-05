@@ -1,0 +1,27 @@
+git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1 && cd dc-larastack-v1
+
+git clone https://github.com/ariadata/dc-larastack-laravel9-v1.git src
+
+mkdir -p ./data/{mongo,mysql,pgsql,redis}
+
+[ ! -f .env ] && cp .env.example .env
+[ ! -f ./src/.env ] && cp ./src/.env.example ./src/.env
+
+sed -i "s|UID=.*|UID=$(id -u)|g" .env && sed -i "s|GID=.*|GID=$(id -g)|g" .env
+sed -i "s|DC_TZ=.*|DC_TZ=\"$(cat /etc/timezone)\"|g" .env
+sed -i "s|php_value\[date.timezone\] \=.*|php_value\[date.timezone\] \= $(cat /etc/timezone)|g" ./configs/php/fpm-php-override.ini
+
+docker-compose pull
+
+docker-compose up -d
+
+docker-compose -f docker-compose.yml exec -u webuser -T workspace composer install
+docker-compose -f docker-compose.yml exec -u webuser -T workspace php artisan key:generate
+
+
+docker-compose -f docker-compose.yml exec -u webuser -T workspace php artisan migrate:fresh --force
+
+# docker-compose -f docker-compose.yml exec -u webuser workspace php artisan XXX
+
+docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart all
+docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-short-schedule
