@@ -2,6 +2,9 @@ https://npratley.net/building-laravel-8-for-production-release-with-horizon-and-
 https://github.com/DevLAN-io/laravel-boilerplate
 https://github.com/DevLAN-io/laravel-boilerplate/blob/master/docker/production/start-container
 
+mongodb:
+https://github.com/jenssegers/laravel-mongodb#installation
+
 swoole
 octane
 
