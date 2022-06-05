@@ -135,11 +135,11 @@ services:
     restart: unless-stopped
     user: "${UID:-1000}:${GID:-1000}"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: '${MONGO_INITDB_ROOT_USERNAME}'
-      MONGO_INITDB_ROOT_PASSWORD: '${MONGO_INITDB_ROOT_PASSWORD}'
+      MONGO_INITDB_ROOT_USERNAME: '${MONGO_DB_USER}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGO_DB_PASS}'
       TZ: '${DC_TZ}'
     ports:
-      - '${DC_MONGO_DB_PORT:-27017}:27017'
+      - '${MONGO_DB_PORT:-27017}:27017'
     volumes:
       - './data/mongo:/data/db'
     networks:
