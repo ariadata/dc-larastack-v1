@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     user: "${UID:-1000}:${GID:-1000}"
 #    ports:
-#      - '${DC_REDIS_PORT:-6379}:6379'
+#      - '${REDIS_PORT:-6379}:6379'
     volumes:
       - './data/redis:/data'
     healthcheck:
