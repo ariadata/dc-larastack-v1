@@ -1,0 +1,13 @@
+https://gist.github.com/devdrops/c59ee84504d128a7913a480b1191d66e?permalink_comment_id=4026395#gistcomment-4026395
+
+docker-compose -f docker-compose.yml exec -u webuser workspace composer mongodb/mongodb
+
+
+
+docker-compose -f docker-compose.yml exec mysql /bin/bash -c 'mysql -uroot -plarastack_password > ./backups/dump.sql'
+
+
+docker-compose -f docker-compose.yml exec -T mysql /bin/bash -c '/usr/bin/mysqldump -u root --password=${MYSQL_DB_ROOTPASS} --databases ${MYSQL_DB_NAME}' > ./backups/mysql/dump.sql
+docker-compose -f docker-compose.yml exec -T mysql /bin/bash -c '/usr/bin/mysqldump -u root --password=larastack_secure_password_for_mysql_root_user' > ./backups/mysql/dump.sql
+docker-compose -f docker-compose.yml exec -T mysql /bin/bash -c '/usr/bin/mysqldump -u root --password=larastack_secure_password_for_mysql_root_user --databases larastack' > ./backups/dump.sql
+docker-compose -f docker-compose.yml exec -T mysql /bin/bash -c '/usr/bin/mysqldump -u root --password=$"MYSQL_DB_ROOTPASS" --databases larastack' > ./backups/dump.sql
