@@ -1,10 +1,7 @@
 version: '3.7'
 
 networks:
-  larastack-network:
-    external: false
-  nginx-proxy-manager:
-    external: true
+  larastack-local-network:
 
 services:
   workspace:
@@ -25,16 +22,13 @@ services:
       TZ: '${DC_TZ}'
       PUID: '${UID:-1000}'
       PGID: '${GID:-1000}'
-#    ports:
-#      - '${DC_NGINX_HTTP_PORT:-80}:80'
+    ports:
+      - '${DC_NGINX_HTTP_PORT:-80}:80'
     depends_on:
       - mysql
       - redis
     networks:
-      larastack-network:
-      nginx-proxy-manager:
-        aliases:
-          - larastack-v1
+      larastack-local-network:
 
   supervisor:
     image: ariadata/php-8.1:supervisor
@@ -55,15 +49,15 @@ services:
     depends_on:
       - workspace
     networks:
-      - larastack-network
+      - larastack-local-network
 
   redis:
     image: 'redis:7-bullseye'
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     restart: unless-stopped
     user: "${UID:-1000}:${GID:-1000}"
-#    ports:
-#      - '${REDIS_PORT:-6379}:6379'
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
     volumes:
       - './data/redis:/data'
     healthcheck:
@@ -71,7 +65,7 @@ services:
       retries: 3
       timeout: 5s
     networks:
-      - larastack-network
+      - larastack-local-network
 
   mysql:
     image: 'mariadb:10.6'
@@ -79,8 +73,8 @@ services:
     restart: unless-stopped
     user: "${UID:-1000}:${GID:-1000}"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci  --default-authentication-plugin=mysql_native_password"
-#    ports:
-#      - '${MYSQL_DB_PORT:-3306}:3306'
+    ports:
+      - '${MYSQL_DB_PORT:-3306}:3306'
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_DB_ROOTPASS}'
       MYSQL_DATABASE: '${MYSQL_DB_NAME}'
@@ -92,7 +86,7 @@ services:
       - './data/mysql:/var/lib/mysql'
       - './logs/mysql:/var/log/mysql'
     networks:
-      - larastack-network
+      - larastack-local-network
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_DB_ROOTPASS}" ]
       retries: 3
@@ -103,8 +97,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_pgsql
     restart: unless-stopped
     user: "${UID:-1000}:${GID:-1000}"
-#    ports:
-#      - '${PGSQL_DB_PORT:-5432}:5432'
+    ports:
+      - '${PGSQL_DB_PORT:-5432}:5432'
     environment:
       PGPASSWORD: '${PGSQL_DB_ROOT_PASSWORD}'
       POSTGRES_DB: '${PGSQL_DB_NAME}'
@@ -121,7 +115,7 @@ services:
 #    command: /bin/bash -c "mkdir -p /var/lib/postgresql/data && chown 1000:1000 /var/lib/postgresql/data && chmod -R 777 /var/lib/postgresql/data && postgres"
 # https://bytemeta.vip/repo/docker-library/postgres/issues/917
     networks:
-      - larastack-network
+      - larastack-local-network
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${PGSQL_DB_NAME}", "-U", "${PGSQL_DB_USER}" ]
       retries: 3
@@ -136,12 +130,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: '${MONGO_DB_USER}'
       MONGO_INITDB_ROOT_PASSWORD: '${MONGO_DB_PASS}'
       TZ: '${DC_TZ}'
-#    ports:
-#      - '${MONGO_DB_PORT:-27017}:27017'
+    ports:
+      - '${MONGO_DB_PORT:-27017}:27017'
     volumes:
       - './data/mongo:/data/db'
     networks:
-      - larastack-network
+      - larastack-local-network
 
   phpmyadmin:
     image: 'phpmyadmin/phpmyadmin:5.1'
@@ -155,25 +149,5 @@ services:
     ports:
       - '${DC_PHPMYADMIN_HTTP_PORT:-8082}:80'
     networks:
-      larastack-network:
-      nginx-proxy-manager:
-        aliases:
-          - larastack-pma
+      larastack-local-network:
 
-  zabbix-agent:
-    image: zabbix/zabbix-agent2:alpine-6.0-latest
-    ports:
-      - "10055:10050"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    #   - ./zbx_env/etc/zabbix/zabbix_agentd.d:/etc/zabbix/zabbix_agentd.d:ro
-    #   - ./zbx_env/var/lib/zabbix/modules:/var/lib/zabbix/modules:ro
-    #   - ./zbx_env/var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
-    #   - ./zbx_env/var/lib/zabbix/ssh_keys:/var/lib/zabbix/ssh_keys:ro
-    environment:
-      ZBX_SERVER_HOST: 'zabbix.arzinja.dev'
-      ZBX_HOSTNAME: 'larastack-v1'
-#      ZBX_DEBUGLEVEL: 4
-    networks:
-      - larastack-network
