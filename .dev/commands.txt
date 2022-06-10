@@ -9,6 +9,7 @@ mkdir -p ./data/{mongo,mysql,pgsql,redis}
 
 sed -i "s|UID=.*|UID=$(id -u)|g" .env && sed -i "s|GID=.*|GID=$(id -g)|g" .env
 sed -i "s|DC_TZ=.*|DC_TZ=\"$(cat /etc/timezone)\"|g" .env
+sed -i "s|APP_TIMEZONE=.*|APP_TIMEZONE=\"$(cat /etc/timezone)\"|g" ./src/.env
 sed -i "s|php_value\[date.timezone\] \=.*|php_value\[date.timezone\] \= $(cat /etc/timezone)|g" ./configs/php/fpm-php-override.ini
 
 docker-compose pull
@@ -25,3 +26,5 @@ docker-compose -f docker-compose.yml exec -u webuser workspace php artisan migra
 
 docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart all
 docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-short-schedule
+docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-schedule
+docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-queue
