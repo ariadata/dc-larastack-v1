@@ -16,7 +16,7 @@ docker-compose pull
 
 docker-compose up -d
 
-docker-compose -f docker-compose.yml exec -u webuser -T workspace composer update
+docker-compose -f docke r-compose.yml exec -u webuser -T workspace composer update
 docker-compose -f docker-compose.yml exec -u webuser -T workspace php artisan key:generate
 
 
