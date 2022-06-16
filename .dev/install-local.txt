@@ -24,8 +24,11 @@ docker-compose up -d
 # docker-compose -f local.yml exec -u webuser -T workspace php artisan key:generate
 
 docker-compose exec -u webuser workspace composer update
+
 docker-compose exec -u webuser workspace php artisan key:generate
 docker-compose exec -u webuser workspace php artisan migrate:fresh --force
+
+docker-compose exec -u webuser workspace ./vendor/bin/pest
 
 
 # docker-compose exec -u webuser workspace php artisan XXX
@@ -34,3 +37,5 @@ docker-compose exec -u webuser workspace php artisan migrate:fresh --force
 docker-compose exec -u webuser supervisor supervisorctl restart laravel-schedule laravel-short-schedule
 docker-compose exec -u webuser supervisor supervisorctl restart laravel-schedule
 docker-compose exec -u webuser supervisor supervisorctl restart laravel-queue
+
+https://devpeel.com/setup-supervisord-to-manage-laravel-queue/

@@ -28,3 +28,18 @@ docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl re
 docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-short-schedule
 docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-schedule
 docker-compose -f docker-compose.yml exec -u webuser supervisor supervisorctl restart laravel-queue
+
+
+============================= Pest Commands
+docker-compose exec -u webuser workspace composer require pestphp/pest --dev --with-all-dependencies
+docker-compose exec -u webuser workspace composer require pestphp/pest-plugin-laravel --dev
+docker-compose exec -u webuser workspace php artisan pest:install
+docker-compose exec -u webuser workspace ./vendor/bin/pest
+---
+docker-compose -f local.yml exec -u webuser workspace composer require pestphp/pest --dev --with-all-dependencies
+docker-compose -f local.yml exec -u webuser workspace composer require pestphp/pest-plugin-laravel --dev
+docker-compose -f local.yml exec -u webuser workspace php artisan pest:install
+docker-compose -f local.yml exec -u webuser workspace ./vendor/bin/pest
+
+
+=============================
