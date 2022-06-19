@@ -3,6 +3,7 @@ bash <(curl -sSL https://raw.githubusercontent.com/ariadata/ubuntu-sh/master/doc
 
 git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1 && cd dc-larastack-v1
 
+git clone https://git.arzinja.dev/arzinja-v2/backend/arzinja-app.git src
 git clone https://github.com/ariadata/dc-larastack-laravel9-v1.git src
 
 mkdir -p ./data/{mongo,mysql,pgsql,redis}
