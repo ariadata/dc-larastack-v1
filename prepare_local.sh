@@ -3,12 +3,13 @@ clear
 cd "$(dirname "$0")"
 
 git clone https://github.com/ariadata/dc-larastack-laravel9-v1.git src
+clear
 
 system_default_timezone="$(cat /etc/timezone)"
 STACK_UID="$(id -u)"
 STACK_GID="$(id -g)"
 
-read -e -p $'Enter \e[33mStack Name\033[0m :\n' -i "larastack" DC_COMPOSE_PROJECT_NAME
+read -e -p $'Enter \e[33mStack-Name\033[0m :\n' -i "larastack" DC_COMPOSE_PROJECT_NAME
 
 read -e -p $'Enter \e[33mdefault timezone\033[0m for stack :\n' -i $system_default_timezone STACK_DEFAULT_TZ
 
