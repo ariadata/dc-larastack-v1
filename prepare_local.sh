@@ -2,6 +2,8 @@
 clear
 cd "$(dirname "$0")"
 
+git clone https://github.com/ariadata/dc-larastack-laravel9-v1.git src
+
 system_default_timezone="$(cat /etc/timezone)"
 STACK_UID="$(id -u)"
 STACK_GID="$(id -g)"
@@ -34,3 +36,17 @@ sudo sed -i "s|DC_PHPMYADMIN_HTTP_PORT=.*|DC_PHPMYADMIN_HTTP_PORT=$STACK_NGINX_H
 sudo sed -i "s|DC_NGINX_HTTP_PORT=.*|DC_NGINX_HTTP_PORT=$STACK_PHPMYADMIN_HTTP_PORT|g" .env
 
 cp local.yml docker-compose.yml
+
+docker-compose pull
+docker-compose up -d
+
+docker-compose exec -u webuser -T workspace composer update
+docker-compose exec -u webuser -T workspace php artisan key:generate
+docker-compose exec -u webuser -T workspace php artisan migrate:fresh --force
+docker-compose exec -u webuser -T workspace ./vendor/bin/pint
+
+docker-compose exec -u webuser -T supervisor supervisorctl restart all
+
+echo $'Enter \e[32mLocal Stack is Ready\033[0m\n'
+
+
