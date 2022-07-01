@@ -22,14 +22,24 @@ docker-compose pull
 
 docker-compose up -d
 
-# docker-compose -f local.yml exec -u webuser -T workspace php artisan key:generate
 
+# first local
 docker-compose exec -u webuser workspace composer update
+
+# first production
+docker-compose exec -u webuser workspace composer install --optimize-autoloader --no-dev
+
+docker-compose -f local.yml exec -u webuser -T workspace php artisan key:generate
+
+docker-compose run --rm npm install
+docker-compose run --rm npm run dev
+docker-compose run --rm npm run prod
 
 docker-compose exec -u webuser workspace php artisan key:generate
 docker-compose exec -u webuser workspace php artisan migrate:fresh --force
 
 docker-compose exec -u webuser workspace ./vendor/bin/pest
+docker-compose exec -u webuser workspace ./vendor/bin/pint
 
 
 # docker-compose exec -u webuser workspace php artisan XXX

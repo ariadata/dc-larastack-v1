@@ -8,7 +8,7 @@ networks:
 
 services:
   workspace:
-    image: ariadata/php-8.1:fpm-nginx
+    image: 'ariadata/php-8.1:fpm-nginx'
     container_name: ${COMPOSE_PROJECT_NAME}_workspace
     restart: unless-stopped
     extra_hosts:
@@ -30,6 +30,8 @@ services:
     depends_on:
       - mysql
       - redis
+      - pgsql
+      - mongo
     networks:
       larastack-network:
       nginx-proxy-manager:
@@ -37,7 +39,7 @@ services:
           - larastack-v1
 
   supervisor:
-    image: ariadata/php-8.1:supervisor
+    image: 'ariadata/php-8.1:supervisor'
     container_name: ${COMPOSE_PROJECT_NAME}_supervisor
     restart: unless-stopped
     extra_hosts:
@@ -80,7 +82,7 @@ services:
     user: "${UID:-1000}:${GID:-1000}"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci  --default-authentication-plugin=mysql_native_password"
 #    ports:
-#      - '${MYSQL_DB_PORT:-3306}:3306'
+#      - '${MYSQL_DB_PORT:-3307}:3306'
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_DB_ROOTPASS}'
       MYSQL_DATABASE: '${MYSQL_DB_NAME}'
@@ -143,6 +145,17 @@ services:
     networks:
       - larastack-network
 
+  npm:
+    image: 'node:18.4'
+    container_name: ${COMPOSE_PROJECT_NAME}_npm
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    entrypoint: [ 'npm', '--no-bin-links' ]
+    networks:
+      - larastack-local-network
+
   phpmyadmin:
     image: 'phpmyadmin/phpmyadmin:5.1'
     container_name: ${COMPOSE_PROJECT_NAME}_phpmyadmin
@@ -150,10 +163,10 @@ services:
       - mysql
     environment:
       PMA_HOST: mysql
-      PMA_PORT: ${MYSQL_DB_PORT}
+      PMA_PORT: '3306'
     restart: unless-stopped
-    ports:
-      - '${DC_PHPMYADMIN_HTTP_PORT:-8082}:80'
+#    ports:
+#      - '${DC_PHPMYADMIN_HTTP_PORT:-8082}:80'
     networks:
       larastack-network:
       nginx-proxy-manager:
@@ -161,7 +174,7 @@ services:
           - larastack-pma
 
   zabbix-agent:
-    image: zabbix/zabbix-agent2:alpine-6.0-latest
+    image: 'zabbix/zabbix-agent2:alpine-6.0-latest'
     ports:
       - "10055:10050"
     volumes:
@@ -176,4 +189,7 @@ services:
       ZBX_HOSTNAME: 'larastack-v1'
 #      ZBX_DEBUGLEVEL: 4
     networks:
-      - larastack-network
+      larastack-network:
+      nginx-proxy-manager:
+        aliases:
+          - larastack-zabbix
