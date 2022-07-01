@@ -9,7 +9,7 @@ system_default_timezone="$(cat /etc/timezone)"
 STACK_UID="$(id -u)"
 STACK_GID="$(id -g)"
 
-read -e -p $'Enter \e[33mStack-Name\033[0m :\n' -i "larastack" DC_COMPOSE_PROJECT_NAME
+read -e -p $'Enter \e[33mStack-Name\033[0m (no spaces!):\n' -i "larastack" DC_COMPOSE_PROJECT_NAME
 
 read -e -p $'Enter \e[33mdefault timezone\033[0m for stack :\n' -i $system_default_timezone STACK_DEFAULT_TZ
 
@@ -43,12 +43,13 @@ docker-compose up -d
 
 docker-compose exec -u webuser -T workspace composer update
 docker-compose exec -u webuser -T workspace php artisan key:generate
+sleep 5
 docker-compose exec -u webuser -T workspace php artisan migrate:fresh --force
 docker-compose exec -u webuser -T workspace ./vendor/bin/pint
 
 docker-compose exec -u webuser -T supervisor supervisorctl restart all
 
-clear
+# clear
 echo $'\e[32mLocal Stack is Ready\033[0m\n========================================\n'
 echo -e "Web : http://localhost:$STACK_NGINX_HTTP_PORT\n"
 echo -e "PMA : http://localhost:$STACK_PHPMYADMIN_HTTP_PORT\n"
