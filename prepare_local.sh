@@ -48,6 +48,9 @@ docker-compose exec -u webuser -T workspace ./vendor/bin/pint
 
 docker-compose exec -u webuser -T supervisor supervisorctl restart all
 
-echo $'Enter \e[32mLocal Stack is Ready\033[0m\n'
+clear
+echo $'\e[32mLocal Stack is Ready\033[0m\n========================================\n'
+echo $'Web : \e[33mhttp://localhost:'$STACK_NGINX_HTTP_PORT'\033[0m\n'
+echo $'PMA : \e[33mhttp://localhost:'$STACK_PHPMYADMIN_HTTP_PORT'\033[0m\n'
 
 
