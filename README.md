@@ -5,19 +5,72 @@
 ![](https://img.shields.io/github/watchers/ariadata/dc-larastack-v1.svg)
 ![](https://img.shields.io/github/forks/ariadata/dc-larastack-v1.svg)
 
-### This Stack needs : 
+### Laravel Stack for local and production , includes:
+* workspace
+  * nginx
+  * php-fpm
+* supervisor (schedule , queue ,short-schedule , ...)
+* MariaDb
+* PHPMyAdmin
+* PostgreSQL
+* MongoDb
+* Redis
+* npm
+* zabbix-agent
 
-* for `Local` : [dockerhost](https://github.com/ariadata/ubuntu-sh)
 
-* for `Production` : [dockerhost](https://github.com/ariadata/ubuntu-sh) + [Nginx-Proxy-Manager](https://github.com/ariadata/dc-nginxproxymanager)
+### This needs :
+
+* 🧪 for **Local** : [docker + docker-compose](https://github.com/ariadata/ubuntu-sh)
+
+* 🌐 for **Production** : [docker + docker-compose](https://github.com/ariadata/ubuntu-sh) + [Nginx-Proxy-Manager](https://github.com/ariadata/dc-nginxproxymanager)
 
 ---
-## 🧪 **Local**
-### Install and initialize
+# 🧪 Local usage
+### 1️⃣ Install and initialize
 ```bash
-git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1 && cd dc-larastack-v1
+git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1
+cd dc-larastack-v1
+bash prepare_local.sh
+```
+### 2️⃣ Config bash_liases
+Copy these lines into `.bash_aliases` of your system :
+```bash
+alias sample='test'
+alias sample='test'
+```
+### ☑️ Usage Commands
+##### artisan commands :
+```bash
+php artisan test
+```
+##### other commands :
+`php artisan test`
 
-sed -i "s|UID=.*|UID=$(id -u)|g" .env && sed -i "s|GID=.*|GID=$(id -g)|g" .env
-sed -i "s|DC_TZ=.*|DC_TZ=\"$(cat /etc/timezone)\"|g" .env
-sed -i "s|APP_TIMEZONE=.*|APP_TIMEZONE=\"$(cat /etc/timezone)\"|g" ./src/.env
-sed -i "s|php_value\[date.timezone\] \=.*|php_value\[date.timezone\] \= $(cat /etc/timezone)|g" ./configs/php/fpm-php-override.ini
+---
+# 🌐 Production use
+### 1️⃣ Install and initialize
+```bash
+git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1
+cd dc-larastack-v1
+bash prepare_local.sh
+```
+### 2️⃣ Config bash_liases
+Copy these lines into `.bash_aliases` of your system :
+```bash
+alias sample='test'
+alias sample='test'
+```
+### ☑️ Usage Commands
+##### artisan commands :
+```bash
+php artisan test
+```
+### ♾️ CD/CD useful commands
+sample text :
+```bash
+php artisan test
+```
+---
+## 🔗 Resources & Links
+* [sample](https://sample.com) #description
