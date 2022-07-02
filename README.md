@@ -17,7 +17,7 @@
 * Redis
 * npm
 * zabbix-agent
-
+* fresh [laravel 9.x](https://laravel.com/docs/9.x) from [this github repo](https://github.com/ariadata/dc-larastack-laravel9-v1) configured for this stack
 
 ### This needs :
 
