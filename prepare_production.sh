@@ -36,7 +36,10 @@ sudo sed -i "s|php_value\[date.timezone\] \=.*|php_value\[date.timezone\] \= $ST
 sudo sed -i "s|DC_PHPMYADMIN_HTTP_PORT=.*|DC_PHPMYADMIN_HTTP_PORT=$STACK_NGINX_HTTP_PORT|g" .env
 sudo sed -i "s|DC_NGINX_HTTP_PORT=.*|DC_NGINX_HTTP_PORT=$STACK_PHPMYADMIN_HTTP_PORT|g" .env
 
-cp production.yml docker-compose.yml
+mv production.yml docker-compose.yml
+rm -rf .dev .git
+rm -f prepare_production.sh production.yml
+
 
 docker-compose pull
 docker-compose up -d
