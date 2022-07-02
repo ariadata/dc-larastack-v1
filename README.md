@@ -6,10 +6,10 @@
 ![](https://img.shields.io/github/forks/ariadata/dc-larastack-v1.svg)
 
 ### Laravel Stack for local and production , includes:
-* workspace
+* workspace based on [s6-overlay](https://github.com/just-containers/s6-overlay)
   * nginx
-  * php-fpm
-* supervisor (schedule , queue ,short-schedule , ...)
+  * php-8.1(fpm)
+* supervisor (schedule , queue ,short-schedule , horizon , ...)
 * MariaDb
 * PHPMyAdmin
 * PostgreSQL
