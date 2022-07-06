@@ -54,7 +54,7 @@ larastack php artisan test
 larastack composer install XXX
 
 # restart short-schedule and shcedule
-larastack-supervisor restart restart laravel-schedule laravel-short-schedule
+larastack-supervisor restart laravel-schedule laravel-short-schedule
 
 # pint/clean code
 larastack ./vendor/bin/pint
