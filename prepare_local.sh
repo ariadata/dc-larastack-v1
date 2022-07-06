@@ -44,6 +44,8 @@ docker-compose up -d
 docker-compose exec -u webuser -T supervisor supervisorctl restart all
 
 clear
-echo -e $'\n=====================================\n\e[32m'$DC_COMPOSE_PROJECT_NAME' is Up and running\033[0m\n'
-echo -e "Web access : http://localhost:$STACK_NGINX_HTTP_PORT\n"
-echo -e "PMA access : http://localhost:$STACK_PHPMYADMIN_HTTP_PORT\n"
+echo -e $'\n=====================================\n\e[32m First step of '$DC_COMPOSE_PROJECT_NAME' complete.\033[0m\n'
+echo -e "\e[35mNow run other initial commands from documents\033[0m\n\n"
+echo -e "at the end of setup : \nWeb access : http://localhost:$STACK_NGINX_HTTP_PORT\n"
+echo -e "PMA access : http://localhost:$STACK_PHPMYADMIN_HTTP_PORT\n\n"
+echo -e "You can see other configs and ports in docker-compose file\n"
