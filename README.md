@@ -29,26 +29,51 @@
 # 🧪 Local usage
 ### 1️⃣ Install and initialize
 ```bash
-git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1
-cd dc-larastack-v1
+git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1 && cd dc-larastack-v1
 bash prepare_local.sh
+
+docker-compose exec -u webuser -T workspace composer update
+docker-compose exec -u webuser -T workspace php artisan key:generate
+docker-compose exec -u webuser -T workspace php artisan migrate:fresh --force
+docker-compose exec -u webuser -T workspace ./vendor/bin/pint
+docker-compose exec -u webuser -T supervisor supervisorctl restart all
 ```
 ### 2️⃣ Config bash_liases
 Copy these lines into `.bash_aliases` of your system :
 ```bash
-alias sample='test'
-alias sample='test'
+alias larastack='docker-compose exec -u webuser workspace'
+alias larastack-supervisor='docker-compose exec -u webuser supervisor supervisorctl'
 ```
 ### ☑️ Usage Commands
 ##### artisan commands :
 ```bash
-php artisan test
+# php artisan test
+larastack php artisan test
+
+# composer install XXX
+larastack composer install XXX
+
+# restart short-schedule and shcedule
+larastack-supervisor restart restart laravel-schedule laravel-short-schedule
+
+# pint/clean code
+larastack ./vendor/bin/pint
+
+# system down/up
+docker-compose down
+docker-compose up -d
+
+# npm build commands :
+docker-compose run --rm npm install
+docker-compose run --rm npm run dev
+docker-compose run --rm npm run prod
+
 ```
 ##### other commands :
 `php artisan test`
 
 ---
-# 🌐 Production use
+# 🌐 Production usage
 ### 1️⃣ Install and initialize
 ```bash
 git clone https://github.com/ariadata/dc-larastack-v1.git dc-larastack-v1
