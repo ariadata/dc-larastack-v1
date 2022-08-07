@@ -66,7 +66,7 @@ docker-compose up -d
 # npm build commands :
 docker-compose run --rm npm install
 docker-compose run --rm npm run dev
-docker-compose run --rm npm run prod
+docker-compose run --rm npm run build
 
 ```
 ##### other commands :
