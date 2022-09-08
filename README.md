@@ -21,7 +21,7 @@
 
 ### This needs :
 
-* 🧪 for **Local** : [docker + docker-compose](https://github.com/ariadata/ubuntu-sh)
+* 🧪 for **Local** : [docker + docker-compose](https://github.com/ariadata/dockerhost-sh)
 
 * 🌐 for **Production** : [docker + docker-compose](https://github.com/ariadata/ubuntu-sh) + [Nginx-Proxy-Manager](https://github.com/ariadata/dc-nginxproxymanager)
 
